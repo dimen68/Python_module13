@@ -12,8 +12,7 @@ bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 kb_start = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-kb_start.add(KeyboardButton('Рассчитать калории'))
-kb_start.add(KeyboardButton('Информация'))
+kb_start.add(KeyboardButton('Рассчитать'), KeyboardButton('Информация'))
 
 
 @dp.message_handler(commands=['start'])
@@ -34,10 +33,15 @@ class UserState(StatesGroup):
     weight = State()
 
 
-@dp.message_handler(text=['Рассчитать калории', 'Colories', 'Калории', 'калори'])
+@dp.message_handler(text=['Рассчитать'])
 async def set_age(message):
     await message.answer('Введите свой возраст: ')
     await UserState.age.set()
+
+
+@dp.message_handler()
+async def other_message (message):
+    await message.answer('Введите команду /start, чтобы начать общение.')
 
 
 @dp.message_handler(state=UserState.age)
